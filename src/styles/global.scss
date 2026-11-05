@@ -1,0 +1,214 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: $ink;
+  color: $text;
+  font-family: $font-body;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+img,
+video,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid $accent-light;
+  outline-offset: 3px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 16px 28px;
+  border: 0;
+  border-radius: $radius-sm;
+  font-family: $font-heading;
+  font-stretch: 112%;
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 160ms $ease-out,
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  // La flecha avanza un poco al pasar el mouse
+  .fa-arrow-right {
+    transition: transform 250ms $ease-out;
+  }
+
+  @include hover {
+    .fa-arrow-right {
+      transform: translateX(4px);
+    }
+  }
+
+  &--primary {
+    background: $accent;
+    color: #fff;
+
+    @include hover {
+      background: $accent-dark;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $text;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    @include hover {
+      border-color: #fff;
+    }
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.section {
+  padding-block: 88px;
+
+  @include from('md') {
+    padding-block: 136px;
+  }
+}
+
+// Anclas del menú: dejan espacio para el header fijo
+[id] {
+  scroll-margin-top: 72px;
+}
+
+.page-enter-active {
+  transition: opacity 250ms ease;
+}
+
+.page-leave-active {
+  transition: opacity 150ms ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+// Modal: el fondo se funde y el panel sube (hoja en móvil, escala leve en desktop)
+.fade-enter-active {
+  transition: opacity 250ms ease;
+
+  .modal__panel {
+    transition: transform 400ms $ease-out;
+  }
+}
+
+.fade-leave-active {
+  transition: opacity 180ms ease;
+
+  .modal__panel {
+    transition: transform 180ms ease;
+  }
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+
+  .modal__panel {
+    transform: translateY(40px);
+
+    @include from('sm') {
+      transform: translateY(12px) scale(0.97);
+    }
+  }
+}
+
+// Entrada del hero al cargar (HeroSection.vue)
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+// v-reveal: aparece al entrar en pantalla. --i escalona elementos hermanos.
+// !important porque es temporal (la directiva quita el atributo al terminar) y debe
+// ganarle a la transición propia del componente mientras dura la entrada.
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms ease,
+    transform 700ms $ease-out !important;
+  transition-delay: calc(var(--i, 0) * 60ms) !important;
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  // Sin desplazamientos, solo fundidos
+  [data-reveal] {
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

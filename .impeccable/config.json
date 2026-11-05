@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/components/funnel/VerticalsSection.vue"
+        ],
+        "createdAt": "2026-10-16T20:54:43.527Z",
+        "reason": "Claude: L129 is a full-width 3px TOP bar that scales in as the active-panel indicator of the expanding service panels, not a one-side card tab"
+      }
+    ]
+  }
+}

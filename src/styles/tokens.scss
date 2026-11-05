@@ -1,0 +1,157 @@
+// Solo variables y mixins: este archivo se antepone a cada <style lang="scss">,
+// así que cualquier selector aquí se duplicaría en todos los componentes.
+@use 'sass:color';
+@use 'sass:map';
+
+// Base oscura (azul marino de marca). Los nombres son semánticos: $ink es el fondo,
+// $surface las superficies, $text el texto.
+$ink: #070e1d;
+$surface: #0d1729;
+$surface-2: #15213a;
+$line: rgba(255, 255, 255, 0.1);
+$text: #eef1f6;
+$muted: #9aa5ba;
+
+// Alias usados por las bandas oscuras
+$navy: #0a1225;
+$navy-2: #121d38;
+$on-dark: $text;
+$on-dark-muted: $muted;
+$line-dark: $line;
+
+// Secciones "papel": tono cálido, no blanco puro, para que se sienta editorial
+$paper: #f2f0eb;
+$paper-2: #e7e4dc;
+$paper-text: #0a1225;
+$paper-muted: #545c6c;
+$paper-line: rgba(10, 18, 37, 0.14);
+
+$accent: #c8202a;
+$accent-light: #e5444c;
+$accent-dark: color.adjust($accent, $lightness: -10%);
+$danger: #e5444c;
+$success: #2fa36f;
+
+$font-heading: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+$font-body: 'Source Sans 3', system-ui, sans-serif;
+$font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+// Curvas propias: las de CSS se quedan cortas. ease-out para entradas, ease-in-out para movimiento
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+$ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+$radius: 4px;
+$radius-sm: 2px;
+$container: 1240px;
+
+$breakpoints: (
+  'sm': 560px,
+  'md': 820px,
+  'lg': 1080px,
+);
+
+@mixin from($bp) {
+  @media (min-width: map.get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+// Hover solo con mouse: en touch el tap deja el hover pegado
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin container($max: $container) {
+  width: 100%;
+  max-width: $max;
+  margin-inline: auto;
+  padding-inline: 20px;
+
+  @include from('md') {
+    padding-inline: 40px;
+  }
+}
+
+// Titulares de display: Archivo expandido en mayúsculas, como una firma de defensa
+@mixin display($size) {
+  font-family: $font-heading;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: $size;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+// Títulos de tarjetas y subtítulos
+@mixin heading($size) {
+  font-family: $font-heading;
+  font-stretch: 110%;
+  font-weight: 700;
+  font-size: $size;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+// Etiqueta técnica monoespaciada (índices de sección, metadatos)
+@mixin label {
+  font-family: $font-mono;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@mixin eyebrow {
+  @include label;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: $accent-light;
+
+  &::before {
+    content: '';
+    flex: 0 0 22px;
+    height: 1px;
+    background: currentColor;
+  }
+}
+
+@mixin card {
+  background: $surface;
+  border: 1px solid $line;
+  border-radius: $radius;
+}
+
+// Esquinas tácticas sobre una imagen o panel (el elemento debe ser position: relative)
+@mixin brackets($color: rgba(255, 255, 255, 0.7), $size: 16px) {
+  background-image:
+    linear-gradient($color, $color), linear-gradient($color, $color),
+    linear-gradient($color, $color), linear-gradient($color, $color),
+    linear-gradient($color, $color), linear-gradient($color, $color),
+    linear-gradient($color, $color), linear-gradient($color, $color);
+  background-repeat: no-repeat;
+  background-size:
+    $size 1px, 1px $size, $size 1px, 1px $size,
+    $size 1px, 1px $size, $size 1px, 1px $size;
+  background-position:
+    top left, top left, top right, top right,
+    bottom left, bottom left, bottom right, bottom right;
+}
+
+// Grilla con flexbox: $basis es el ancho mínimo de cada tarjeta
+@mixin flex-cards($basis, $gap: 16px) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+
+  > * {
+    flex: 1 1 $basis;
+  }
+}
